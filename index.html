@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Password Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+        body {
+            background-color: #050505;
+            color: #d1d5db;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .main-card {
+            background-color: #0a0a0a;
+            border: 1px solid #1a1a1a;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 24px;
+            padding: 1.25rem 1.75rem 2.25rem 1.75rem;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 
+                        0 0 50px -10px rgba(255, 85, 85, 0.05);
+            position: relative;
+        }
+
+        .typewriter-title {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: inline-block;
+            position: relative;
+        }
+
+        /* Secured Badge */
+        .secured-label {
+            display: inline-block;
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            background-color: transparent;
+            padding: 3px 12px;
+            border-radius: 999px;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+            font-size: 8px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 0.75rem;
+        }
+
+        .tab-btn {
+            color: #525252;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 11px;
+            letter-spacing: 0.02em;
+            font-weight: 500;
+        }
+
+        .tab-btn.active {
+            color: #ffffff;
+            background-color: #171717;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+        }
+
+        /* Narrow Password Output */
+        .output-box {
+            background-color: #050505;
+            border: 1px solid #1a1a1a;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 72px;
+            width: 80%;
+            margin: 0 auto 1rem auto;
+            box-shadow: inset 0 0 20px rgba(255, 85, 85, 0.01);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .output-box:hover {
+            border-color: rgba(255, 85, 85, 0.4);
+            box-shadow: 0 0 25px rgba(255, 85, 85, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .copy-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(5, 5, 5, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(4px);
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .output-box:hover .copy-overlay {
+            opacity: 1;
+        }
+
+        .copy-overlay-text {
+            color: #FF5555;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(255, 85, 85, 0.5);
+        }
+
+        /* Strength Gradient Bars */
+        .strength-segment {
+            height: 2px;
+            flex: 1;
+            background-color: #1a1a1a;
+            border-radius: 1px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            height: 2px;
+            background: #1a1a1a;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #FF5555;
+            border-radius: 50%;
+            border: 1px solid #000;
+            box-shadow: 0 0 15px rgba(255, 85, 85, 0.6);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        /* Modular Grid Design */
+        .precision-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1px;
+            background: #141414;
+            border: 1px solid #141414;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .grid-cell {
+            background: #0a0a0a;
+            padding: 1rem 0.75rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            transition: background 0.2s ease;
+        }
+
+        .grid-cell:hover {
+            background: #0d0d0d;
+        }
+
+        .cell-label-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #525252;
+        }
+
+        .cell-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: none;
+            letter-spacing: 0.05em;
+        }
+
+        .cell-icon {
+            font-size: 10px;
+            opacity: 0.6;
+        }
+
+        .cell-controls {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .step-btn {
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #404040;
+            font-size: 8px;
+            border: 1px solid #1a1a1a;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            background: #080808;
+        }
+        
+        .step-btn:hover:not(:disabled) {
+            border-color: #FF5555;
+            color: #FF5555;
+            box-shadow: 0 0 10px rgba(255, 85, 85, 0.1);
+        }
+
+        .cell-val {
+            min-width: 20px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: #FF5555;
+            font-family: 'JetBrains Mono', monospace;
+            text-shadow: 0 0 10px rgba(255, 85, 85, 0.4);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            background: #fff;
+            color: #000;
+            padding: 0.6rem 1.2rem;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            transform: translateY(100px);
+            transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            z-index: 50;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+        }
+
+        #passwordOutput {
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-card">
+        <header class="text-center mb-6">
+            <h1 class="typewriter-title">Password Generator</h1>
+            <div>
+                <span class="secured-label">
+                    Web Crypto API Secured
+                </span>
+            </div>
+        </header>
+
+        <!-- Mode Selection -->
+        <div class="flex bg-[#050505] p-1 rounded-xl mb-6 border border-[#171717]">
+            <button onclick="setMode('random')" id="tab-random" class="tab-btn active flex-1 py-2 rounded-lg transition-all">Random</button>
+            <button onclick="setMode('passphrase')" id="tab-passphrase" class="tab-btn flex-1 py-2 rounded-lg transition-all">Passphrase</button>
+        </div>
+
+        <!-- Password Display -->
+        <div class="output-box py-5 px-6 rounded-2xl flex items-center justify-center text-center mb-4 relative overflow-hidden" onclick="copyToClipboard()">
+            <input type="text" id="passwordOutput" readonly 
+                class="bg-transparent border-none outline-none text-xl text-center text-white w-full tracking-widest font-normal cursor-pointer"
+                value="Generating...">
+            <div class="copy-overlay">
+                <span class="copy-overlay-text">Click to copy</span>
+            </div>
+        </div>
+
+        <!-- Strength Indicator -->
+        <div class="flex items-center gap-3 mb-8">
+            <div class="flex-1 flex gap-1.5">
+                <div class="strength-segment" id="s1"></div>
+                <div class="strength-segment" id="s2"></div>
+                <div class="strength-segment" id="s3"></div>
+                <div class="strength-segment" id="s4"></div>
+            </div>
+            <span id="strengthText" class="text-[9px] font-medium text-neutral-500 tracking-tight min-w-[32px] text-right">Fair</span>
+        </div>
+
+        <!-- Settings: Random -->
+        <div id="standardSettings" class="space-y-6">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <label class="text-[11px] font-medium text-neutral-500 tracking-wide uppercase">Length</label>
+                    <span id="lengthDisplay" class="text-[#FF5555] font-medium font-mono text-xs">16</span>
+                </div>
+                <input type="range" id="lengthSlider" min="6" max="50" value="16" class="w-full">
+            </div>
+
+            <!-- Tactical Control Grid with Icons -->
+            <div class="precision-grid">
+                <div class="grid-cell">
+                    <div class="cell-label-wrapper">
+                        <i class="fa-solid fa-arrow-up-a-z cell-icon"></i>
+                        <span class="cell-label">Uppercase</span>
+                    </div>
+                    <div class="cell-controls">
+                        <button onclick="adjustCount('upper', -1)" class="step-btn"><i class="fa-solid fa-minus"></i></button>
+                        <span id="upper-count" class="cell-val">2</span>
+                        <button onclick="adjustCount('upper', 1)" class="step-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="grid-cell">
+                    <div class="cell-label-wrapper">
+                        <i class="fa-solid fa-arrow-down-a-z cell-icon"></i>
+                        <span class="cell-label">Lowercase</span>
+                    </div>
+                    <div class="cell-controls">
+                        <button onclick="adjustCount('lower', -1)" class="step-btn"><i class="fa-solid fa-minus"></i></button>
+                        <span id="lower-count" class="cell-val">2</span>
+                        <button onclick="adjustCount('lower', 1)" class="step-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="grid-cell">
+                    <div class="cell-label-wrapper">
+                        <i class="fa-solid fa-hashtag cell-icon"></i>
+                        <span class="cell-label">Numbers</span>
+                    </div>
+                    <div class="cell-controls">
+                        <button onclick="adjustCount('numbers', -1)" class="step-btn"><i class="fa-solid fa-minus"></i></button>
+                        <span id="numbers-count" class="cell-val">3</span>
+                        <button onclick="adjustCount('numbers', 1)" class="step-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="grid-cell">
+                    <div class="cell-label-wrapper">
+                        <i class="fa-solid fa-at cell-icon"></i>
+                        <span class="cell-label">Symbols</span>
+                    </div>
+                    <div class="cell-controls">
+                        <button onclick="adjustCount('symbols', -1)" class="step-btn"><i class="fa-solid fa-minus"></i></button>
+                        <span id="symbols-count" class="cell-val">3</span>
+                        <button onclick="adjustCount('symbols', 1)" class="step-btn"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings: Passphrase -->
+        <div id="passphraseSettings" class="hidden space-y-6">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between px-1">
+                    <label class="text-[11px] font-medium text-neutral-500 tracking-wide uppercase">Words</label>
+                    <span id="wordCountDisplay" class="text-[#FF5555] font-medium font-mono text-xs">4</span>
+                </div>
+                <input type="range" id="wordSlider" min="2" max="10" value="4" class="w-full">
+            </div>
+            
+            <div class="flex items-center justify-between p-4 bg-[#080808] rounded-2xl border border-[#141414]">
+                <span class="text-[11px] font-medium text-neutral-500 tracking-wide">Separator</span>
+                <select id="passSeparator" class="bg-transparent text-[11px] font-medium text-neutral-100 outline-none cursor-pointer" onchange="generate()">
+                    <option value="-">Hyphen (-)</option>
+                    <option value=".">Dot (.)</option>
+                    <option value="_">Underscore (_)</option>
+                    <option value=" ">Space ( )</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3 mt-10">
+            <button onclick="generate()" class="flex-[2] bg-white text-black py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-200 transition-all active:scale-[0.98]">
+                <i class="fa-solid fa-rotate text-[9px]"></i>
+                Generate
+            </button>
+            <button onclick="copyToClipboard()" class="flex-1 bg-[#171717] text-white py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#262626] transition-all active:scale-[0.98] border border-[#262626]">
+                Copy
+            </button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">
+        Copied to clipboard
+    </div>
+
+    <script>
+        const words = ["alpha", "bravo", "cloud", "delta", "echo", "frost", "ghost", "hotel", "ivory", "joker", "kilo", "lemon", "magic", "night", "ocean", "pixel", "quartz", "river", "solar", "tiger", "ultra", "vivid", "wolf", "xray", "yoga", "zebra", "active", "brave", "clear", "dark", "early", "fancy", "grand", "high", "iron", "jump", "keen", "light", "mighty", "noble", "open", "pure", "quick", "royal", "sharp", "tough", "urban", "vast", "wild", "zen"];
+
+        let currentMode = 'random';
+        let animationInterval = null;
+        let finalGeneratedPassword = ""; 
+
+        const config = {
+            upper: 2,
+            lower: 2,
+            numbers: 3, 
+            symbols: 3  
+        };
+
+        const output = document.getElementById('passwordOutput');
+        const lengthSlider = document.getElementById('lengthSlider');
+        const lengthDisplay = document.getElementById('lengthDisplay');
+        const wordSlider = document.getElementById('wordSlider');
+        const wordDisplay = document.getElementById('wordCountDisplay');
+
+        window.onload = () => generate();
+
+        lengthSlider.oninput = function() {
+            lengthDisplay.innerText = this.value;
+            validateCounts();
+            generate();
+        };
+
+        wordSlider.oninput = function() {
+            wordDisplay.innerText = this.value;
+            generate();
+        };
+
+        function adjustCount(type, delta) {
+            const totalLength = parseInt(lengthSlider.value);
+            const currentTotalRequested = Object.values(config).reduce((a, b) => a + b, 0);
+            const newVal = Math.max(0, Math.min(9, config[type] + delta));
+            const potentialTotal = (currentTotalRequested - config[type]) + newVal;
+            
+            if (potentialTotal <= totalLength) {
+                config[type] = newVal;
+                const el = document.getElementById(`${type}-count`);
+                if (el) el.innerText = newVal;
+                generate();
+            }
+        }
+
+        function validateCounts() {
+            const totalLength = parseInt(lengthSlider.value);
+            let currentTotal = Object.values(config).reduce((a, b) => a + b, 0);
+            
+            // Balanced reduction logic: reduce categories with the highest values first
+            while (currentTotal > totalLength) {
+                let keys = Object.keys(config).filter(k => config[k] > 0);
+                if (keys.length === 0) break;
+                
+                // Find category with maximum value to reduce fairly
+                let targetKey = keys[0];
+                for (let i = 1; i < keys.length; i++) {
+                    if (config[keys[i]] > config[targetKey]) {
+                        targetKey = keys[i];
+                    }
+                }
+                config[targetKey]--;
+                currentTotal = Object.values(config).reduce((a, b) => a + b, 0);
+            }
+
+            Object.keys(config).forEach(k => {
+                const el = document.getElementById(`${k}-count`);
+                if (el) el.innerText = config[k];
+            });
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${mode}`).classList.add('active');
+            const std = document.getElementById('standardSettings');
+            const pss = document.getElementById('passphraseSettings');
+            if (mode === 'passphrase') {
+                std.classList.add('hidden');
+                pss.classList.remove('hidden');
+            } else {
+                std.classList.remove('hidden');
+                pss.classList.add('hidden');
+            }
+            generate();
+        }
+
+        function generate() {
+            let password = "";
+            if (currentMode === 'random') {
+                password = generateRandom();
+            } else {
+                password = generatePassphrase();
+            }
+            finalGeneratedPassword = password;
+            matrixRevealEffect(password);
+            updateStrength(password);
+        }
+
+        function matrixRevealEffect(newPassword) {
+            const glyphs = "ABCDEFGHIJKLMNO0123456789!@#$%^&*";
+            const frameRate = 14; 
+            const revealPerFrame = 1.6; 
+            let iteration = 0;
+
+            if (animationInterval) clearInterval(animationInterval);
+
+            animationInterval = setInterval(() => {
+                output.value = newPassword
+                    .split("")
+                    .map((char, index) => {
+                        if (index < iteration) return newPassword[index];
+                        return glyphs[Math.floor(Math.random() * glyphs.length)];
+                    })
+                    .join("");
+
+                if (iteration >= newPassword.length) {
+                    clearInterval(animationInterval);
+                    output.value = newPassword;
+                }
+                iteration += revealPerFrame;
+            }, frameRate);
+        }
+
+        function getPool() {
+            return [
+                { name: 'lower', chars: "abcdefghijklmnopqrstuvwxyz" },
+                { name: 'upper', chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
+                { name: 'numbers', chars: "0123456789" },
+                { name: 'symbols', chars: "!@#$%^&*()_+" }
+            ];
+        }
+
+        function generateRandom() {
+            const length = parseInt(lengthSlider.value);
+            const pools = getPool();
+            let result = [];
+            pools.forEach(p => {
+                const countRequested = config[p.name];
+                for (let i = 0; i < countRequested; i++) {
+                    const char = p.chars.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % p.chars.length);
+                    result.push(char);
+                }
+            });
+            const activePools = pools.filter(p => config[p.name] > 0);
+            const selectionPools = activePools.length > 0 ? activePools : pools;
+            const combinedChars = selectionPools.map(p => p.chars).join("");
+            const remaining = Math.max(0, length - result.length);
+            if (remaining > 0 && combinedChars.length > 0) {
+                const randomBuffer = new Uint32Array(remaining);
+                crypto.getRandomValues(randomBuffer);
+                for (let i = 0; i < remaining; i++) {
+                    result.push(combinedChars.charAt(randomBuffer[i] % combinedChars.length));
+                }
+            }
+            return result.sort(() => Math.random() - 0.5).join("");
+        }
+
+        function generatePassphrase() {
+            const count = parseInt(wordSlider.value);
+            const sep = document.getElementById('passSeparator').value;
+            let result = [];
+            for (let i = 0; i < count; i++) {
+                const idx = crypto.getRandomValues(new Uint32Array(1))[0] % words.length;
+                result.push(words[idx]);
+            }
+            return result.join(sep);
+        }
+
+        function updateStrength(pw) {
+            let score = 0;
+            if (pw.length >= 8) score++;
+            if (pw.length >= 16) score++;
+            let variations = 0;
+            if (/[a-z]/.test(pw)) variations++;
+            if (/[A-Z]/.test(pw)) variations++;
+            if (/[0-9]/.test(pw)) variations++;
+            if (/[^a-zA-Z0-9]/.test(pw)) variations++;
+            if (variations >= 3) score++;
+            if (variations >= 4 && pw.length >= 12) score++;
+            score = Math.max(1, Math.min(score, 4));
+
+            const segments = ['s1', 's2', 's3', 's4'];
+            const labels = ["Weak", "Fair", "Good", "Secure"];
+            const gradients = [
+                "linear-gradient(90deg, #f87171, #ef4444)",
+                "linear-gradient(90deg, #fbbf24, #f59e0b)",
+                "linear-gradient(90deg, #34d399, #10b981)",
+                "linear-gradient(90deg, #059669, #10b981)"
+            ];
+            const shadowColors = ["#ef4444", "#f59e0b", "#10b981", "#10b981"];
+
+            segments.forEach((s, i) => {
+                const el = document.getElementById(s);
+                if (i < score) {
+                    el.style.background = gradients[score - 1];
+                    el.style.boxShadow = `0 0 12px ${shadowColors[score - 1]}44`;
+                } else {
+                    el.style.background = "#1a1a1a";
+                    el.style.boxShadow = "none";
+                }
+            });
+
+            const text = document.getElementById('strengthText');
+            text.innerText = labels[score - 1];
+            text.style.color = shadowColors[score - 1];
+            text.style.textShadow = `0 0 12px ${shadowColors[score - 1]}44`;
+        }
+
+        function copyToClipboard() {
+            const val = finalGeneratedPassword;
+            if (!val || val === "Generating...") return;
+            const el = document.createElement('textarea');
+            el.value = val;
+            el.setAttribute('readonly', '');
+            el.style.position = 'absolute';
+            el.style.left = '-9999px';
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+    </script>
+</body>
+</html>
