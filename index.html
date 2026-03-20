@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Password Generator</title>
+    <title>Password Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -14,24 +14,59 @@
             color: #d1d5db;
             font-family: 'Inter', sans-serif;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start; /* Changed to flex-start for long scrolling pages */
             min-height: 100vh;
             margin: 0;
-            padding: 1rem;
+            padding: 4rem 1rem;
             -webkit-font-smoothing: antialiased;
         }
 
-        .main-card {
+        .main-card, .history-card {
             background-color: #0a0a0a;
             border: 1px solid #1a1a1a;
             width: 100%;
             max-width: 420px;
             border-radius: 24px;
-            padding: 1.25rem 1.75rem 2.25rem 1.75rem;
             box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 
                         0 0 50px -10px rgba(255, 85, 85, 0.05);
             position: relative;
+        }
+
+        .main-card {
+            padding: 1.25rem 1.75rem 2.25rem 1.75rem;
+            z-index: 2;
+        }
+
+        .history-card {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            transition: all 0.3s ease;
+        }
+
+        /* History Scrollable Area */
+        #historyList {
+            max-height: 320px;
+            overflow-y: auto;
+            padding-right: 8px;
+            margin-right: -4px;
+        }
+
+        /* Custom High-Tech Scrollbar */
+        #historyList::-webkit-scrollbar {
+            width: 3px;
+        }
+        #historyList::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        #historyList::-webkit-scrollbar-thumb {
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        #historyList::-webkit-scrollbar-thumb:hover {
+            background: #FF5555;
         }
 
         .typewriter-title {
@@ -73,55 +108,99 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
         }
 
-        /* Narrow Password Output */
+        /* Password Output Container */
         .output-box {
             background-color: #050505;
             border: 1px solid #1a1a1a;
             font-family: 'JetBrains Mono', monospace;
-            min-height: 72px;
-            width: 80%;
-            margin: 0 auto 1rem auto;
-            box-shadow: inset 0 0 20px rgba(255, 85, 85, 0.01);
-            transition: all 0.3s ease;
+            min-height: 80px;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
-            overflow: hidden;
-        }
-        
-        .output-box:hover {
-            border-color: rgba(255, 85, 85, 0.4);
-            box-shadow: 0 0 25px rgba(255, 85, 85, 0.08);
-            transform: translateY(-1px);
-        }
-
-        .copy-overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(5, 5, 5, 0.85);
             display: flex;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(4px);
-            pointer-events: none;
-            z-index: 10;
+            overflow: hidden;
+            border-radius: 18px;
+            padding: 1.25rem;
+        }
+        
+        .output-box:hover {
+            border-color: rgba(255, 85, 85, 0.6);
+            box-shadow: 0 0 30px rgba(255, 85, 85, 0.1), inset 0 0 10px rgba(255, 85, 85, 0.05);
+            transform: scale(1.01);
         }
 
-        .output-box:hover .copy-overlay {
-            opacity: 1;
+        #passwordOutput {
+            user-select: none;
+            word-break: break-all;
+            line-height: 1.4;
+            transition: font-size 0.3s ease;
+            width: 100%;
+            text-align: center;
+            color: white;
+            letter-spacing: 0.1em;
         }
 
-        .copy-overlay-text {
-            color: #FF5555;
+        .copy-hint-icon {
+            position: absolute;
+            top: 10px;
+            right: 12px;
             font-size: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            font-weight: 600;
-            text-shadow: 0 0 10px rgba(255, 85, 85, 0.5);
+            color: #FF5555;
+            opacity: 0;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            transform: translateY(-5px);
         }
 
-        /* Strength Gradient Bars */
+        .output-box:hover .copy-hint-icon {
+            opacity: 0.8;
+            transform: translateY(0);
+        }
+
+        /* History Styling */
+        .history-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            background: #080808;
+            border: 1px solid #141414;
+            border-radius: 12px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .history-item:hover {
+            border-color: #FF5555;
+            background: #0d0d0d;
+        }
+
+        .history-text {
+            font-size: 11px;
+            color: #a3a3a3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 280px;
+        }
+
+        .history-copy-icon {
+            font-size: 10px;
+            color: #404040;
+            transition: color 0.2s ease;
+        }
+
+        .history-item:hover .history-copy-icon {
+            color: #FF5555;
+        }
+
+        /* UI Components */
         .strength-segment {
             height: 2px;
             flex: 1;
@@ -148,7 +227,6 @@
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* Modular Grid Design */
         .precision-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -166,32 +244,24 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
-            transition: background 0.2s ease;
-        }
-
-        .grid-cell:hover {
-            background: #0d0d0d;
         }
 
         .cell-label-wrapper {
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #525252;
+            color: #a3a3a3;
         }
 
-        .cell-label {
+        .cell-label, .main-label {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 10.5px;
+            font-size: 11.6px;
             font-weight: 700;
             text-transform: none;
             letter-spacing: 0.05em;
         }
 
-        .cell-icon {
-            font-size: 10px;
-            opacity: 0.6;
-        }
+        .cell-icon { font-size: 11px; opacity: 0.9; }
 
         .cell-controls {
             display: flex;
@@ -244,13 +314,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        .toast.show {
-            transform: translateY(0);
-        }
-
-        #passwordOutput {
-            user-select: none;
-        }
+        .toast.show { transform: translateY(0); }
     </style>
 </head>
 <body>
@@ -259,9 +323,7 @@
         <header class="text-center mb-6">
             <h1 class="typewriter-title">Password Generator</h1>
             <div>
-                <span class="secured-label">
-                    Web Crypto API Secured
-                </span>
+                <span class="secured-label">Web Crypto API Secured</span>
             </div>
         </header>
 
@@ -272,13 +334,9 @@
         </div>
 
         <!-- Password Display -->
-        <div class="output-box py-5 px-6 rounded-2xl flex items-center justify-center text-center mb-4 relative overflow-hidden" onclick="copyToClipboard()">
-            <input type="text" id="passwordOutput" readonly 
-                class="bg-transparent border-none outline-none text-xl text-center text-white w-full tracking-widest font-normal cursor-pointer"
-                value="Generating...">
-            <div class="copy-overlay">
-                <span class="copy-overlay-text">Click to copy</span>
-            </div>
+        <div class="output-box mb-4" onclick="copyToClipboard(finalGeneratedPassword)">
+            <div id="passwordOutput">Generating...</div>
+            <i class="fa-solid fa-copy copy-hint-icon"></i>
         </div>
 
         <!-- Strength Indicator -->
@@ -296,13 +354,12 @@
         <div id="standardSettings" class="space-y-6">
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
-                    <label class="text-[11px] font-medium text-neutral-500 tracking-wide uppercase">Length</label>
+                    <label class="main-label text-neutral-500 tracking-wide">Length</label>
                     <span id="lengthDisplay" class="text-[#FF5555] font-medium font-mono text-xs">16</span>
                 </div>
                 <input type="range" id="lengthSlider" min="6" max="50" value="16" class="w-full">
             </div>
 
-            <!-- Tactical Control Grid with Icons -->
             <div class="precision-grid">
                 <div class="grid-cell">
                     <div class="cell-label-wrapper">
@@ -355,14 +412,13 @@
         <div id="passphraseSettings" class="hidden space-y-6">
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
-                    <label class="text-[11px] font-medium text-neutral-500 tracking-wide uppercase">Words</label>
+                    <label class="main-label text-neutral-500 tracking-wide">Words</label>
                     <span id="wordCountDisplay" class="text-[#FF5555] font-medium font-mono text-xs">4</span>
                 </div>
                 <input type="range" id="wordSlider" min="2" max="10" value="4" class="w-full">
             </div>
-            
             <div class="flex items-center justify-between p-4 bg-[#080808] rounded-2xl border border-[#141414]">
-                <span class="text-[11px] font-medium text-neutral-500 tracking-wide">Separator</span>
+                <span class="main-label text-neutral-500 tracking-wide">Separator</span>
                 <select id="passSeparator" class="bg-transparent text-[11px] font-medium text-neutral-100 outline-none cursor-pointer" onchange="generate()">
                     <option value="-">Hyphen (-)</option>
                     <option value=".">Dot (.)</option>
@@ -372,21 +428,28 @@
             </div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="flex gap-3 mt-10">
             <button onclick="generate()" class="flex-[2] bg-white text-black py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-200 transition-all active:scale-[0.98]">
-                <i class="fa-solid fa-rotate text-[9px]"></i>
-                Generate
+                <i class="fa-solid fa-rotate text-[9px]"></i> Generate
             </button>
-            <button onclick="copyToClipboard()" class="flex-1 bg-[#171717] text-white py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#262626] transition-all active:scale-[0.98] border border-[#262626]">
+            <button onclick="copyToClipboard(finalGeneratedPassword)" class="flex-1 bg-[#171717] text-white py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#262626] transition-all active:scale-[0.98] border border-[#262626]">
                 Copy
             </button>
         </div>
     </div>
 
-    <div id="toast" class="toast">
-        Copied to clipboard
+    <!-- Password History Box -->
+    <div class="history-card" id="historyBox">
+        <div class="flex items-center justify-between mb-4 px-1">
+            <span class="main-label text-neutral-500 tracking-wide text-[10px] uppercase">History (Up to 50)</span>
+            <button onclick="clearHistory()" class="text-[9px] text-neutral-600 hover:text-red-400 uppercase font-bold transition-colors">Clear</button>
+        </div>
+        <div id="historyList">
+            <div class="text-[10px] text-neutral-700 text-center py-4 font-mono italic">No history yet</div>
+        </div>
     </div>
+
+    <div id="toast" class="toast">Copied to clipboard</div>
 
     <script>
         const words = ["alpha", "bravo", "cloud", "delta", "echo", "frost", "ghost", "hotel", "ivory", "joker", "kilo", "lemon", "magic", "night", "ocean", "pixel", "quartz", "river", "solar", "tiger", "ultra", "vivid", "wolf", "xray", "yoga", "zebra", "active", "brave", "clear", "dark", "early", "fancy", "grand", "high", "iron", "jump", "keen", "light", "mighty", "noble", "open", "pure", "quick", "royal", "sharp", "tough", "urban", "vast", "wild", "zen"];
@@ -394,19 +457,16 @@
         let currentMode = 'random';
         let animationInterval = null;
         let finalGeneratedPassword = ""; 
+        let history = [];
 
-        const config = {
-            upper: 2,
-            lower: 2,
-            numbers: 3, 
-            symbols: 3  
-        };
+        const config = { upper: 2, lower: 2, numbers: 3, symbols: 3 };
 
         const output = document.getElementById('passwordOutput');
         const lengthSlider = document.getElementById('lengthSlider');
         const lengthDisplay = document.getElementById('lengthDisplay');
         const wordSlider = document.getElementById('wordSlider');
         const wordDisplay = document.getElementById('wordCountDisplay');
+        const historyList = document.getElementById('historyList');
 
         window.onload = () => generate();
 
@@ -429,8 +489,7 @@
             
             if (potentialTotal <= totalLength) {
                 config[type] = newVal;
-                const el = document.getElementById(`${type}-count`);
-                if (el) el.innerText = newVal;
+                document.getElementById(`${type}-count`).innerText = newVal;
                 generate();
             }
         }
@@ -438,23 +497,16 @@
         function validateCounts() {
             const totalLength = parseInt(lengthSlider.value);
             let currentTotal = Object.values(config).reduce((a, b) => a + b, 0);
-            
-            // Balanced reduction logic: reduce categories with the highest values first
             while (currentTotal > totalLength) {
                 let keys = Object.keys(config).filter(k => config[k] > 0);
                 if (keys.length === 0) break;
-                
-                // Find category with maximum value to reduce fairly
                 let targetKey = keys[0];
                 for (let i = 1; i < keys.length; i++) {
-                    if (config[keys[i]] > config[targetKey]) {
-                        targetKey = keys[i];
-                    }
+                    if (config[keys[i]] > config[targetKey]) targetKey = keys[i];
                 }
                 config[targetKey]--;
                 currentTotal = Object.values(config).reduce((a, b) => a + b, 0);
             }
-
             Object.keys(config).forEach(k => {
                 const el = document.getElementById(`${k}-count`);
                 if (el) el.innerText = config[k];
@@ -477,6 +529,12 @@
             generate();
         }
 
+        function scaleFontSize(length) {
+            if (length <= 20) output.style.fontSize = "1.25rem";
+            else if (length <= 35) output.style.fontSize = "1.125rem";
+            else output.style.fontSize = "1rem";
+        }
+
         function generate() {
             let password = "";
             if (currentMode === 'random') {
@@ -484,9 +542,43 @@
             } else {
                 password = generatePassphrase();
             }
+            
+            // Add current password to history before updating to the new one
+            if (finalGeneratedPassword && finalGeneratedPassword !== "Generating...") {
+                addToHistory(finalGeneratedPassword);
+            }
+            
             finalGeneratedPassword = password;
+            scaleFontSize(password.length);
             matrixRevealEffect(password);
             updateStrength(password);
+        }
+
+        function addToHistory(pw) {
+            // Avoid duplicate consecutive entries
+            if (history[0] === pw) return; 
+            
+            history.unshift(pw);
+            if (history.length > 50) history.pop(); // Increased limit to 50
+            renderHistory();
+        }
+
+        function renderHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<div class="text-[10px] text-neutral-700 text-center py-4 font-mono italic">No history yet</div>';
+                return;
+            }
+            historyList.innerHTML = history.map(pw => `
+                <div class="history-item" onclick="copyToClipboard('${pw}')">
+                    <span class="history-text">${pw}</span>
+                    <i class="fa-solid fa-copy history-copy-icon"></i>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            history = [];
+            renderHistory();
         }
 
         function matrixRevealEffect(newPassword) {
@@ -494,42 +586,31 @@
             const frameRate = 14; 
             const revealPerFrame = 1.6; 
             let iteration = 0;
-
             if (animationInterval) clearInterval(animationInterval);
-
             animationInterval = setInterval(() => {
-                output.value = newPassword
-                    .split("")
-                    .map((char, index) => {
-                        if (index < iteration) return newPassword[index];
-                        return glyphs[Math.floor(Math.random() * glyphs.length)];
-                    })
-                    .join("");
-
+                output.innerText = newPassword.split("").map((char, index) => {
+                    if (index < iteration) return newPassword[index];
+                    return glyphs[Math.floor(Math.random() * glyphs.length)];
+                }).join("");
                 if (iteration >= newPassword.length) {
                     clearInterval(animationInterval);
-                    output.value = newPassword;
+                    output.innerText = newPassword;
                 }
                 iteration += revealPerFrame;
             }, frameRate);
         }
 
-        function getPool() {
-            return [
+        function generateRandom() {
+            const length = parseInt(lengthSlider.value);
+            const pools = [
                 { name: 'lower', chars: "abcdefghijklmnopqrstuvwxyz" },
                 { name: 'upper', chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZ" },
                 { name: 'numbers', chars: "0123456789" },
                 { name: 'symbols', chars: "!@#$%^&*()_+" }
             ];
-        }
-
-        function generateRandom() {
-            const length = parseInt(lengthSlider.value);
-            const pools = getPool();
             let result = [];
             pools.forEach(p => {
-                const countRequested = config[p.name];
-                for (let i = 0; i < countRequested; i++) {
+                for (let i = 0; i < config[p.name]; i++) {
                     const char = p.chars.charAt(crypto.getRandomValues(new Uint32Array(1))[0] % p.chars.length);
                     result.push(char);
                 }
@@ -538,11 +619,11 @@
             const selectionPools = activePools.length > 0 ? activePools : pools;
             const combinedChars = selectionPools.map(p => p.chars).join("");
             const remaining = Math.max(0, length - result.length);
-            if (remaining > 0 && combinedChars.length > 0) {
-                const randomBuffer = new Uint32Array(remaining);
-                crypto.getRandomValues(randomBuffer);
+            if (remaining > 0) {
+                const buffer = new Uint32Array(remaining);
+                crypto.getRandomValues(buffer);
                 for (let i = 0; i < remaining; i++) {
-                    result.push(combinedChars.charAt(randomBuffer[i] % combinedChars.length));
+                    result.push(combinedChars.charAt(buffer[i] % combinedChars.length));
                 }
             }
             return result.sort(() => Math.random() - 0.5).join("");
@@ -553,8 +634,7 @@
             const sep = document.getElementById('passSeparator').value;
             let result = [];
             for (let i = 0; i < count; i++) {
-                const idx = crypto.getRandomValues(new Uint32Array(1))[0] % words.length;
-                result.push(words[idx]);
+                result.push(words[crypto.getRandomValues(new Uint32Array(1))[0] % words.length]);
             }
             return result.join(sep);
         }
@@ -572,8 +652,6 @@
             if (variations >= 4 && pw.length >= 12) score++;
             score = Math.max(1, Math.min(score, 4));
 
-            const segments = ['s1', 's2', 's3', 's4'];
-            const labels = ["Weak", "Fair", "Good", "Secure"];
             const gradients = [
                 "linear-gradient(90deg, #f87171, #ef4444)",
                 "linear-gradient(90deg, #fbbf24, #f59e0b)",
@@ -581,8 +659,9 @@
                 "linear-gradient(90deg, #059669, #10b981)"
             ];
             const shadowColors = ["#ef4444", "#f59e0b", "#10b981", "#10b981"];
+            const labels = ["Weak", "Fair", "Good", "Secure"];
 
-            segments.forEach((s, i) => {
+            ['s1', 's2', 's3', 's4'].forEach((s, i) => {
                 const el = document.getElementById(s);
                 if (i < score) {
                     el.style.background = gradients[score - 1];
@@ -592,15 +671,12 @@
                     el.style.boxShadow = "none";
                 }
             });
-
             const text = document.getElementById('strengthText');
             text.innerText = labels[score - 1];
             text.style.color = shadowColors[score - 1];
-            text.style.textShadow = `0 0 12px ${shadowColors[score - 1]}44`;
         }
 
-        function copyToClipboard() {
-            const val = finalGeneratedPassword;
+        function copyToClipboard(val) {
             if (!val || val === "Generating...") return;
             const el = document.createElement('textarea');
             el.value = val;
