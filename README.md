@@ -11,7 +11,6 @@ A sleek, high-security password tool **made** with a focus on privacy and a mode
 * **Precision Control**: Set exact counts for uppercase, lowercase, numbers, and symbols.
 * **Strength Meter**: Real-time visual feedback on password entropy.
 * **Session History**: Stores the last 50 **made** passwords locally in your browser.
-* **Matrix Effect**: A unique animation that reveals your new credentials.
 
 ## ⚙️ How It Works
 
@@ -26,5 +25,3 @@ A sleek, high-security password tool **made** with a focus on privacy and a mode
 * **Brute-Force Protection**: High-entropy generation ensures patterns are unpredictable.
 
 ---
-
-**Made** with 💻 by [vikram-aiguy](https://github.com/vikram-aiguy)
