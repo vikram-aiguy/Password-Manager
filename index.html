@@ -16,10 +16,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* Changed to flex-start for long scrolling pages */
+            justify-content: flex-start;
             min-height: 100vh;
             margin: 0;
-            padding: 4rem 1rem;
+            padding: 2rem 1rem;
             -webkit-font-smoothing: antialiased;
         }
 
@@ -39,27 +39,25 @@
             z-index: 2;
         }
 
+        /* Scaled down history card */
         .history-card {
-            margin-top: 1.5rem;
-            padding: 1.25rem;
-            transition: all 0.3s ease;
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 20px;
         }
 
-        /* History Scrollable Area */
+        /* Reduced height for scroll area */
         #historyList {
-            max-height: 320px;
+            max-height: 180px;
             overflow-y: auto;
-            padding-right: 8px;
-            margin-right: -4px;
+            padding-right: 6px;
         }
 
-        /* Custom High-Tech Scrollbar */
         #historyList::-webkit-scrollbar {
-            width: 3px;
+            width: 2px;
         }
         #historyList::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
+            background: transparent;
         }
         #historyList::-webkit-scrollbar-thumb {
             background: #1a1a1a;
@@ -78,7 +76,6 @@
             position: relative;
         }
 
-        /* Secured Badge */
         .secured-label {
             display: inline-block;
             color: #10b981;
@@ -108,7 +105,6 @@
             box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
         }
 
-        /* Password Output Container */
         .output-box {
             background-color: #050505;
             border: 1px solid #1a1a1a;
@@ -161,16 +157,16 @@
             transform: translateY(0);
         }
 
-        /* History Styling */
+        /* Slimmer history items */
         .history-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 1rem;
+            padding: 0.6rem 0.8rem;
             background: #080808;
             border: 1px solid #141414;
-            border-radius: 12px;
-            margin-bottom: 0.5rem;
+            border-radius: 10px;
+            margin-bottom: 0.4rem;
             cursor: pointer;
             transition: all 0.2s ease;
             font-family: 'JetBrains Mono', monospace;
@@ -182,8 +178,8 @@
         }
 
         .history-text {
-            font-size: 11px;
-            color: #a3a3a3;
+            font-size: 10px;
+            color: #888;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -191,16 +187,14 @@
         }
 
         .history-copy-icon {
-            font-size: 10px;
+            font-size: 9px;
             color: #404040;
-            transition: color 0.2s ease;
         }
 
         .history-item:hover .history-copy-icon {
             color: #FF5555;
         }
 
-        /* UI Components */
         .strength-segment {
             height: 2px;
             flex: 1;
@@ -327,19 +321,16 @@
             </div>
         </header>
 
-        <!-- Mode Selection -->
         <div class="flex bg-[#050505] p-1 rounded-xl mb-6 border border-[#171717]">
             <button onclick="setMode('random')" id="tab-random" class="tab-btn active flex-1 py-2 rounded-lg transition-all">Random</button>
             <button onclick="setMode('passphrase')" id="tab-passphrase" class="tab-btn flex-1 py-2 rounded-lg transition-all">Passphrase</button>
         </div>
 
-        <!-- Password Display -->
         <div class="output-box mb-4" onclick="copyToClipboard(finalGeneratedPassword)">
             <div id="passwordOutput">Generating...</div>
             <i class="fa-solid fa-copy copy-hint-icon"></i>
         </div>
 
-        <!-- Strength Indicator -->
         <div class="flex items-center gap-3 mb-8">
             <div class="flex-1 flex gap-1.5">
                 <div class="strength-segment" id="s1"></div>
@@ -350,7 +341,6 @@
             <span id="strengthText" class="text-[9px] font-medium text-neutral-500 tracking-tight min-w-[32px] text-right">Fair</span>
         </div>
 
-        <!-- Settings: Random -->
         <div id="standardSettings" class="space-y-6">
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
@@ -408,7 +398,6 @@
             </div>
         </div>
 
-        <!-- Settings: Passphrase -->
         <div id="passphraseSettings" class="hidden space-y-6">
             <div class="space-y-4">
                 <div class="flex items-center justify-between px-1">
@@ -429,23 +418,23 @@
         </div>
 
         <div class="flex gap-3 mt-10">
-            <button onclick="generate()" class="flex-[2] bg-white text-black py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-200 transition-all active:scale-[0.98]">
-                <i class="fa-solid fa-rotate text-[9px]"></i> Generate
+            <button onclick="generate()" class="flex-[2] bg-white text-black py-3.5 rounded-xl text-[12px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-200 transition-all active:scale-[0.98]">
+                <i class="fa-solid fa-rotate text-[10px]"></i> Generate
             </button>
-            <button onclick="copyToClipboard(finalGeneratedPassword)" class="flex-1 bg-[#171717] text-white py-3.5 rounded-xl text-[11px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#262626] transition-all active:scale-[0.98] border border-[#262626]">
+            <button onclick="copyToClipboard(finalGeneratedPassword)" class="flex-1 bg-[#171717] text-white py-3.5 rounded-xl text-[12px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#262626] transition-all active:scale-[0.98] border border-[#262626]">
                 Copy
             </button>
         </div>
     </div>
 
-    <!-- Password History Box -->
+    <!-- Compact History Box -->
     <div class="history-card" id="historyBox">
-        <div class="flex items-center justify-between mb-4 px-1">
-            <span class="main-label text-neutral-500 tracking-wide text-[10px] uppercase">History (Up to 50)</span>
-            <button onclick="clearHistory()" class="text-[9px] text-neutral-600 hover:text-red-400 uppercase font-bold transition-colors">Clear</button>
+        <div class="flex items-center justify-between mb-3 px-1">
+            <span class="main-label text-neutral-600 tracking-wide text-[9px] uppercase font-bold">History (Latest 30)</span>
+            <button onclick="clearHistory()" class="text-[8px] text-neutral-700 hover:text-red-400 uppercase font-bold transition-colors">Clear All</button>
         </div>
         <div id="historyList">
-            <div class="text-[10px] text-neutral-700 text-center py-4 font-mono italic">No history yet</div>
+            <div class="text-[9px] text-neutral-800 text-center py-4 font-mono italic">No recent sessions</div>
         </div>
     </div>
 
@@ -543,7 +532,6 @@
                 password = generatePassphrase();
             }
             
-            // Add current password to history before updating to the new one
             if (finalGeneratedPassword && finalGeneratedPassword !== "Generating...") {
                 addToHistory(finalGeneratedPassword);
             }
@@ -555,17 +543,15 @@
         }
 
         function addToHistory(pw) {
-            // Avoid duplicate consecutive entries
             if (history[0] === pw) return; 
-            
             history.unshift(pw);
-            if (history.length > 50) history.pop(); // Increased limit to 50
+            if (history.length > 30) history.pop(); // Balanced at 30
             renderHistory();
         }
 
         function renderHistory() {
             if (history.length === 0) {
-                historyList.innerHTML = '<div class="text-[10px] text-neutral-700 text-center py-4 font-mono italic">No history yet</div>';
+                historyList.innerHTML = '<div class="text-[9px] text-neutral-800 text-center py-4 font-mono italic">No recent sessions</div>';
                 return;
             }
             historyList.innerHTML = history.map(pw => `
