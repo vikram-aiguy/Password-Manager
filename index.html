@@ -10,7 +10,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
         body {
-            background-color: #0f1115; /* Softened from pitch black */
+            background-color: #0a0c12; /* Deep Midnight Sapphire */
             color: #d1d5db;
             font-family: 'Inter', sans-serif;
             display: flex;
@@ -24,13 +24,13 @@
         }
 
         .main-card, .history-card {
-            background-color: #1a1d23; /* Deep slate instead of pure black */
-            border: 1px solid #2d333b; /* Slightly more visible borders */
+            background-color: #131722; /* Richer dark blue-grey */
+            border: 1px solid #22293b; /* Sapphire tinted borders */
             width: 100%;
             max-width: 420px;
             border-radius: 24px;
-            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 
-                        0 0 50px -10px rgba(255, 85, 85, 0.05);
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.9), 
+                        0 0 50px -10px rgba(77, 124, 255, 0.05);
             position: relative;
         }
 
@@ -58,7 +58,7 @@
             background: transparent;
         }
         #historyList::-webkit-scrollbar-thumb {
-            background: #2d333b;
+            background: #22293b;
             border-radius: 10px;
         }
         #historyList::-webkit-scrollbar-thumb:hover {
@@ -90,7 +90,7 @@
         }
 
         .tab-btn {
-            color: #71717a;
+            color: #64748b; /* Muted slate blue */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-size: 11px;
             letter-spacing: 0.02em;
@@ -99,18 +99,18 @@
 
         .tab-btn.active {
             color: #ffffff;
-            background-color: #2d333b;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.03);
+            background-color: #22293b;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
         }
 
         .output-box {
-            background-color: #0f1115;
-            border: 1px solid #2d333b;
+            background-color: #0a0c12;
+            border: 1px solid #22293b;
             font-family: 'JetBrains Mono', monospace;
             min-height: 80px;
             width: 100%;
             margin-bottom: 1.5rem;
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.4);
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             position: relative;
@@ -160,8 +160,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 0.6rem 0.8rem;
-            background: #1e2229;
-            border: 1px solid #2d333b;
+            background: #181d29;
+            border: 1px solid #22293b;
             border-radius: 10px;
             margin-bottom: 0.4rem;
             cursor: pointer;
@@ -171,12 +171,12 @@
 
         .history-item:hover {
             border-color: #FF5555;
-            background: #252a33;
+            background: #1d2331;
         }
 
         .history-text {
             font-size: 10px;
-            color: #9ca3af;
+            color: #94a3b8;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -185,7 +185,7 @@
 
         .history-copy-icon {
             font-size: 9px;
-            color: #4b5563;
+            color: #475569;
         }
 
         .history-item:hover .history-copy-icon {
@@ -195,7 +195,7 @@
         .strength-segment {
             height: 2px;
             flex: 1;
-            background-color: #2d333b;
+            background-color: #22293b;
             border-radius: 1px;
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -203,7 +203,7 @@
         input[type="range"] {
             -webkit-appearance: none;
             height: 2px;
-            background: #2d333b;
+            background: #22293b;
             cursor: pointer;
         }
 
@@ -222,14 +222,14 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1px;
-            background: #2d333b;
-            border: 1px solid #2d333b;
+            background: #22293b;
+            border: 1px solid #22293b;
             border-radius: 16px;
             overflow: hidden;
         }
 
         .grid-cell {
-            background: #1a1d23;
+            background: #131722;
             padding: 1rem 0.75rem;
             display: flex;
             flex-direction: column;
@@ -241,7 +241,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            color: #a3a3a3;
+            color: #94a3b8;
         }
 
         .cell-label, .main-label {
@@ -266,12 +266,12 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #6b7280;
+            color: #64748b;
             font-size: 8px;
-            border: 1px solid #2d333b;
+            border: 1px solid #22293b;
             border-radius: 6px;
             transition: all 0.2s ease;
-            background: #252a33;
+            background: #1e2638;
         }
         
         .step-btn:hover:not(:disabled) {
@@ -318,7 +318,7 @@
             </div>
         </header>
 
-        <div class="flex bg-[#0f1115] p-1 rounded-xl mb-6 border border-[#2d333b]">
+        <div class="flex bg-[#0a0c12] p-1 rounded-xl mb-6 border border-[#22293b]">
             <button onclick="setMode('random')" id="tab-random" class="tab-btn active flex-1 py-2 rounded-lg transition-all">Random</button>
             <button onclick="setMode('passphrase')" id="tab-passphrase" class="tab-btn flex-1 py-2 rounded-lg transition-all">Passphrase</button>
         </div>
@@ -403,7 +403,7 @@
                 </div>
                 <input type="range" id="wordSlider" min="2" max="10" value="4" class="w-full">
             </div>
-            <div class="flex items-center justify-between p-4 bg-[#0f1115] rounded-2xl border border-[#2d333b]">
+            <div class="flex items-center justify-between p-4 bg-[#0a0c12] rounded-2xl border border-[#22293b]">
                 <span class="main-label text-neutral-500 tracking-wide">Separator</span>
                 <select id="passSeparator" class="bg-transparent text-[11px] font-medium text-neutral-100 outline-none cursor-pointer" onchange="generate()">
                     <option value="-">Hyphen (-)</option>
@@ -418,20 +418,19 @@
             <button onclick="generate()" class="flex-[2] bg-white text-black py-3.5 rounded-xl text-[12px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-neutral-200 transition-all active:scale-[0.98]">
                 <i class="fa-solid fa-rotate text-[10px]"></i> Generate
             </button>
-            <button onclick="copyToClipboard(finalGeneratedPassword)" class="flex-1 bg-[#252a33] text-white py-3.5 rounded-xl text-[12px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#2d333b] transition-all active:scale-[0.98] border border-[#2d333b]">
+            <button onclick="copyToClipboard(finalGeneratedPassword)" class="flex-1 bg-[#1d2331] text-white py-3.5 rounded-xl text-[12px] font-bold tracking-wider flex items-center justify-center gap-2 hover:bg-[#22293b] transition-all active:scale-[0.98] border border-[#22293b]">
                 Copy
             </button>
         </div>
     </div>
 
-    <!-- Compact History Box -->
     <div class="history-card" id="historyBox">
         <div class="flex items-center justify-between mb-3 px-1">
             <span class="main-label text-neutral-600 tracking-wide text-[9px] uppercase font-bold">History (Latest 30)</span>
-            <button onclick="clearHistory()" class="text-[8px] text-neutral-700 hover:text-red-400 uppercase font-bold transition-colors">Clear All</button>
+            <button onclick="clearHistory()" class="text-[8px] text-neutral-500 hover:text-red-400 uppercase font-bold transition-colors">Clear All</button>
         </div>
         <div id="historyList">
-            <div class="text-[9px] text-neutral-800 text-center py-4 font-mono italic">No recent sessions</div>
+            <div class="text-[9px] text-neutral-700 text-center py-4 font-mono italic">No recent sessions</div>
         </div>
     </div>
 
@@ -548,7 +547,7 @@
 
         function renderHistory() {
             if (history.length === 0) {
-                historyList.innerHTML = '<div class="text-[9px] text-neutral-800 text-center py-4 font-mono italic">No recent sessions</div>';
+                historyList.innerHTML = '<div class="text-[9px] text-neutral-700 text-center py-4 font-mono italic">No recent sessions</div>';
                 return;
             }
             historyList.innerHTML = history.map(pw => `
@@ -650,7 +649,7 @@
                     el.style.background = gradients[score - 1];
                     el.style.boxShadow = `0 0 12px ${shadowColors[score - 1]}44`;
                 } else {
-                    el.style.background = "#2d333b";
+                    el.style.background = "#22293b";
                     el.style.boxShadow = "none";
                 }
             });
